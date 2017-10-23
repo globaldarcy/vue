@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div id="header">
     <div class="content-wrapper">
       <div class="avatar">
         <img width="64" height="64" v-bind:src="seller.avatar" alt="">
@@ -98,7 +98,7 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixin"
-  .header
+  #header
     position: relative
     overflow: hidden
     color: #fff

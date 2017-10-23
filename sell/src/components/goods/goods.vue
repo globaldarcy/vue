@@ -31,19 +31,24 @@
                   <span class="now">$ {{food.price}}</span>
                   <span class="old" v-show="food.oldPrice">$ {{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food"></cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
-    <shopcart v-bind:delivery-price="seller.deliveryPrice" v-bind:min-price="seller.minPrice"></shopcart>
+    <shopcart :select-foods="selectFoods" v-bind:delivery-price="seller.deliveryPrice"
+              v-bind:min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
 <script>
   import BScroll from 'better-scroll'
   import shopcart from 'components/shopcart/shopcart'
+  import cartcontrol from 'components/cartcontrol/cartcontrol'
   const ERR_OK = 0
   export default{
     props: {
@@ -76,13 +81,25 @@
         for (let i = 0; i < this.listHeight.length; i++) {
           let height1 = this.listHeight[i]
           let height2 = this.listHeight[i + 1]
-          if (!height2 || (this.scrollY >= (height1) && this.scrollY < height2)) {
+          if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
             //console.log("1= "+height1, "<= Y= "+this.scrollY , "< 2= "+height2)
             //console.log(i)
             return i
           }
         }
         return 0
+      },
+      selectFoods(){
+        let foods = []
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food)
+            }
+          })
+        })
+        //console.log("sel= " + JSON.stringify(foods))
+        return foods
       }
     },
     methods: {
@@ -100,7 +117,8 @@
           click: true
         })
         this.foodsScroll = new BScroll(this.$refs.foodswrapper, {
-          probeType: 3
+          probeType: 3,
+          click: true
         })
         this.foodsScroll.on('scroll', (pos) => {
           this.scrollY = Math.abs(Math.round(pos.y))
@@ -118,8 +136,14 @@
       }
     },
     components: {
-      shopcart
-    }
+      shopcart,
+      cartcontrol
+    }/*,
+    events: {
+      'cartAdd'(target){
+        this._drop(target)
+      }
+    }*/
   }
 </script>
 
@@ -226,6 +250,8 @@
               text-decoration: line-through
               font-size: 10px
               color: rgb(147, 153, 159)
-          .last
-            display: block
+          .cartcontrol-wrapper
+            position: absolute
+            right: 0
+            bottom: 12px
 </style>

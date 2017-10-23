@@ -12,15 +12,25 @@
         <div class="desc">另需配送费$ {{deliveryPrice}} 元</div>
       </div>
       <div class="content-right">
-        <div class="pay">
-          $ {{minPrice}} 元起送
+        <div class="pay" :class="payClass">
+          {{payDesc}}
         </div>
       </div>
+    </div>
+    <div class="ball-container">
+      <transition-group name="drop" tag="div" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
+        <!--<div>-->
+        <div v-for="ball in balls" :key="1" v-show="ball.show" class="ball">
+          <div class="inner inner-hook"></div>
+        </div>
+        <!--</div>-->
+      </transition-group>
     </div>
   </div>
 </template>
 
 <script>
+  import {vm} from '../../components/event.js'
   export default{
     props: {
       deliveryPrice: {
@@ -37,10 +47,32 @@
           return [
             {
               price: 10,
-              count: 99
+              count: 1
             }
           ]
         }
+      }
+    },
+    data(){
+      return {
+        balls: [
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          }
+        ],
+        dropBalls: []
       }
     },
     computed: {
@@ -59,7 +91,71 @@
         return count
       },
       payDesc(){
-
+        if (this.totalPrice === 0) {
+          return `$${this.minPrice}元起送`
+        } else if (this.totalPrice < this.minPrice) {
+          let diff = this.minPrice - this.totalPrice
+          return `还差${diff}元起送`
+        } else {
+          return '去结算'
+        }
+      },
+      payClass(){
+        if (this.totalPrice < this.minPrice) {
+          return 'not-enough'
+        } else {
+          return 'enough'
+        }
+      }
+    },
+    created(){
+      vm.$on('cartAdd', (el) => {
+        for (let i = 0; i < this.balls.length; i++) {
+          let ball = this.balls[i]
+          if (!ball.show) {
+            ball.show = true
+            ball.el = el
+            this.dropBalls.push(ball)
+            return
+          }
+        }
+      })
+    },
+    methods: {
+      beforeEnter(el){
+        let count = this.balls.length
+        while (count--) {
+          let ball = this.balls[count]
+          if (ball.show) {
+            let rect = ball.el.getBoundingClientRect()
+            let x = rect.left - 32
+            let y = -(window.innerHeight - rect.top - 22)
+            el.style.display = ''
+            el.style.webkitTransform = `translate3d(0,${y}px,0)`
+            el.style.transform = `translate3d(0,${y}px,0)`
+            let inner = el.getElementsByClassName('inner-hook')[0]
+            inner.style.webkitTransform = `translate3d(${x}px,0,0)`
+            inner.style.transform = `translate3d(${x}px,0,0)`
+          }
+        }
+      },
+      enter(el){
+        /* eslint-disable no-unused-vars */
+        let rf = el.offestHeight
+        this.$nextTick(() => {
+          el.style.webkitTransform = 'translate3d(0,0,0)'
+          el.style.transform = 'translate3d(0,0,0)'
+          let inner = el.getElementsByClassName('inner-hook')[0]
+          inner.style.webkitTransform = 'translate3d(0,0,0)'
+          inner.style.transform = 'translate3d(0,0,0)'
+        })
+      },
+      afterEnter(el){
+        let ball = this.dropBalls.shift()
+        if (ball) {
+          ball.show = false
+          el.style.display = 'none'
+        }
       }
     }
   }
@@ -149,4 +245,25 @@
           font-size: 12px
           font-weight: 700
           background: #2b333b
+          &.not-enough
+            background: #2b333b
+          &.enough
+            background: #00b43c
+            color: #fff
+    .ball-container
+      .ball
+        position: fixed
+        left: 32px
+        bottom: 22px
+        z-index: 200
+        .inner
+          width: 16px
+          height: 16px
+          border-radius: 50%
+          background: rgb(0, 160, 220)
+          transition: all 0.4s
+        &.drop-enter-active, &.drop-leave-active
+          opacity: 1
+          transition: all 0.4s
+
 </style>
