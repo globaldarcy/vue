@@ -16,6 +16,7 @@
 </template>
 
 <script>
+  import {vm} from '../../components/event'
   const POSITIVE = 0
   const NEGATIVE = 1
   const ALL = 2
@@ -49,7 +50,8 @@
     methods: {
       select(type){
         this.selectType = type
-        //this.$emit('ratingtype.select', type)
+        //this.$emit('ratingtype', type)
+        //http://blog.csdn.net/o_Mario_o/article/details/77035451
       }
     }
   }

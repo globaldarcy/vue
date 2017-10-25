@@ -46,9 +46,9 @@
   import split from 'components/split/split'
   import ratingselect from 'components/ratingselect/ratingselect'
   import {vm} from '../../components/event'
-  const POSITIVE = 0
-  const NEGATIVE = 1
-  const ALL = 2
+  //  const POSITIVE = 0
+  //  const NEGATIVE = 1
+  let ALL = 2
   export default{
     props: {
       food: {
@@ -63,7 +63,7 @@
         desc: {
           all: '全部',
           positive: '推荐',
-          negative: '吐槽'
+          negative: '吐槽',
         }
       }
     },
