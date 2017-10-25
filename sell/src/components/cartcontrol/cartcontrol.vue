@@ -1,5 +1,5 @@
 <template>
-  <div id="cart-control">
+  <div class="cart-control">
     <transition name="move">
       <div class="cart-decrease" v-show="food.count>0" @click.stop.prevent="decreaseCart">
         <span class="inner icon-remove_circle_outline"></span>
@@ -43,7 +43,7 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  #cart-control
+  .cart-control
     font-size: 0
     .cart-decrease
       display: inline-block

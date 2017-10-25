@@ -1,5 +1,5 @@
 <template>
-  <div id="shop-cart-group">
+  <div class="shop-cart-group">
     <div class="shop-cart">
       <div class="content" @click="toggleList">
         <div class="content-left">
@@ -234,7 +234,7 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixin"
-  #shop-cart-group
+  .shop-cart-group
     .shop-cart
       position: fixed
       left: 0
