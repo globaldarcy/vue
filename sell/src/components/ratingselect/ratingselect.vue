@@ -1,16 +1,16 @@
 <template>
   <div class="ratingselect">
     <div class="rating-type">
-      <span @click="select(2)" class="block positive" :class="{'active':selectType===2}">{{desc.all}}<span
-        class="count">50</span></span>
-      <span @click="select(0)" class="block positive" :class="{'active':selectType===0}">{{desc.positive}}<span
-        class="count">30</span></span>
-      <span @click="select(1)" class="block negative" :class="{'active':selectType===1}">{{desc.negative}}<span
-        class="count">10</span></span>
+      <span @click="select(2)" class="block positive" :class="{'active':sType===2}">{{desc.all}}<span
+        class="count">{{ratings.length}}</span></span>
+      <span @click="select(0)" class="block positive" :class="{'active':sType===0}">{{desc.positive}}<span
+        class="count">{{positives.length}}</span></span>
+      <span @click="select(1)" class="block negative" :class="{'active':sType===1}">{{desc.negative}}<span
+        class="count">{{negatives.length}}</span></span>
     </div>
-    <div class="switch" :class="{'on':onlyContent}">
+    <div @click="toggleContent" class="switch" :class="{'on':oContent}">
       <span class="icon-check_circle"></span>
-      <span class="text">只看有内容的评价</span>
+      <span class="text">只看有内容的评价 </span>
     </div>
   </div>
 </template>
@@ -21,6 +21,12 @@
   const NEGATIVE = 1
   const ALL = 2
   export default{
+    data(){
+      return {
+        sType: this.selectType,
+        oContent: this.onlyContent
+      }
+    },
     props: {
       ratings: {
         type: Array,
@@ -47,11 +53,27 @@
         }
       }
     },
+    computed: {
+      positives(){
+        return this.ratings.filter((rating) => {
+          return rating.rateType === POSITIVE
+        })
+      },
+      negatives(){
+        return this.ratings.filter((rating) => {
+          return rating.rateType === NEGATIVE
+        })
+      }
+    },
     methods: {
       select(type){
-        this.selectType = type
-        //this.$emit('ratingtype', type)
+        this.sType = type
+        this.$emit('select-type', type)
         //http://blog.csdn.net/o_Mario_o/article/details/77035451
+      },
+      toggleContent(){
+        this.oContent = !this.oContent
+        this.$emit('toggle-content', this.oContent)
       }
     }
   }
