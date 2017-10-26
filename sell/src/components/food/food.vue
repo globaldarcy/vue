@@ -63,8 +63,7 @@
   import ratingselect from 'components/ratingselect/ratingselect'
   import {vm} from '../../components/event'
   import {formatDate} from '../../common/js/date'
-  //  const POSITIVE = 0
-  //  const NEGATIVE = 1
+
   let ALL = 2
   export default{
     props: {
@@ -117,10 +116,6 @@
         this.$nextTick(() => {
           this.scroll.refresh()
         })
-
-
-
-
       },
       OnlyContent(con){
         this.onlyContent = con

@@ -30,12 +30,11 @@ const routes = [
   }
 ]
 
+/*设置起始路由地址*/
 let router = new VueRouter({
   routes,
   linkActiveClass:'active'
 })
-
-
 router.push('/goods')
 
 /* eslint-disable no-new */
