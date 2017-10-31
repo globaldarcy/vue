@@ -19,13 +19,18 @@
         </div>
       </div>
       <div class="ball-container">
-        <transition-group name="drop" tag="div" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
-          <!--<div>-->
+        <!--<transition-group name="drop" tag="div" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
           <div v-for="(ball, i) in balls" :key="i" v-show="ball.show" class="ball">
             <div class="inner inner-hook"></div>
           </div>
-          <!--</div>-->
-        </transition-group>
+        </transition-group>-->
+        <div v-for="ball in balls">
+          <transition name="drop" @before-enter="beforeEnter" @enter="dropping" @after-enter="afterDrop">
+            <div class="ball" v-show="ball.show">
+              <div class="inner inner-hook"></div>
+            </div>
+          </transition>
+        </div>
       </div>
       <transition name="fold">
         <div class="shopcat-list" v-show="listShow">
@@ -187,7 +192,7 @@
           }
         }
       },
-      enter(el){
+      dropping(el, done){
         /* eslint-disable no-unused-vars */
         let rf = el.offsetHeight
         this.$nextTick(() => {
@@ -196,9 +201,10 @@
           let inner = el.getElementsByClassName('inner-hook')[0]
           inner.style.webkitTransform = 'translate3d(0,0,0)'
           inner.style.transform = 'translate3d(0,0,0)'
+          el.addEventListener('transitionend', done)
         })
       },
-      afterEnter(el){
+      afterDrop(el){
         let ball = this.dropBalls.shift()
         if (ball) {
           ball.show = false
